@@ -9,11 +9,53 @@ declare global {
   }
 }
 
+const CALENDLY_SCRIPT_SRC = 'https://assets.calendly.com/assets/external/widget.js';
+
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('c1');
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
 
+  // Refs for Calendly container elements
+  const widgetContainers = useRef<Record<string, HTMLDivElement | null>>({
+    c1: null,
+    c2: null,
+    c3: null,
+  });
+
+  // Track which tabs we've initialized already (avoid re-inits)
+  const initializedTabs = useRef<Set<string>>(new Set());
+
+  // Tabs config
+  const tabs = [
+    {
+      id: 'c1',
+      title: 'Intro Call — 15 min',
+      icon: Phone,
+      description:
+        'Quick discovery to understand goals around carbon credits, sustainability or climate tech.',
+      location: 'Google Meet',
+      url: 'https://calendly.com/agricarbonx/30min?hide_event_type_details=1&hide_gdpr_banner=1',
+    },
+    {
+      id: 'c2',
+      title: 'Carbon Consultation — 30 min',
+      icon: Clock,
+      description: 'In-depth discussion on project strategy, carbon accounting and market access.',
+      location: 'Google Meet',
+      url: 'https://calendly.com/agricarbonx/carbon-credit-strategy-consultation?hide_event_type_details=1&hide_gdpr_banner=1',
+    },
+    {
+      id: 'c3',
+      title: 'Partnership — 45 min',
+      icon: Users,
+      description: 'Partnership exploration and integration discussions.',
+      location: 'Google Meet',
+      url: 'https://calendly.com/agricarbonx/strategic-partnership-discussion?hide_event_type_details=1&hide_gdpr_banner=1',
+    },
+  ];
+
+  // Intersection observer to mark section visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -24,43 +66,106 @@ export default function Contact() {
       { threshold: 0.15 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    const el = sectionRef.current;
+    if (el) observer.observe(el);
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
+      if (el) observer.unobserve(el);
+      observer.disconnect();
     };
   }, []);
 
-  const tabs = [
-    {
-      id: 'c1',
-      title: 'Intro Call — 15 min',
-      icon: Phone,
-      description: 'Quick discovery to understand goals around carbon credits, sustainability or climate tech.',
-      location: 'Google Meet',
-      url: 'https://calendly.com/agricarbonx/30min?hide_event_type_details=1&hide_gdpr_banner=1'
-    },
-    {
-      id: 'c2',
-      title: 'Carbon Consultation — 30 min',
-      icon: Clock,
-      description: 'In-depth discussion on project strategy, carbon accounting and market access.',
-      location: 'Google Meet',
-      url: 'https://calendly.com/agricarbonx/carbon-credit-strategy-consultation?hide_event_type_details=1&hide_gdpr_banner=1'
-    },
-    {
-      id: 'c3',
-      title: 'Partnership — 45 min',
-      icon: Users,
-      description: 'Partnership exploration and integration discussions.',
-      location: 'Google Meet',
-      url: 'https://calendly.com/agricarbonx/strategic-partnership-discussion?hide_event_type_details=1&hide_gdpr_banner=1'
-    },
-  ];
+  // Helper: load Calendly script once, return a promise that resolves when ready
+  function loadCalendlyScript(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // If Calendly already present on window, resolve immediately
+      if (typeof window !== 'undefined' && window.Calendly) {
+        resolve();
+        return;
+      }
+
+      // If script already in DOM but Calendly not ready yet, attach load handlers
+      const existing = document.querySelector(`script[src="${CALENDLY_SCRIPT_SRC}"]`);
+      if (existing) {
+        // If script has already loaded, try to resolve quickly
+        if ((existing as HTMLScriptElement).getAttribute('data-loaded') === 'true') {
+          resolve();
+        } else {
+          existing.addEventListener('load', () => resolve());
+          existing.addEventListener('error', () => reject(new Error('Calendly script failed to load')));
+        }
+        return;
+      }
+
+      // Otherwise create the script tag
+      const script = document.createElement('script');
+      script.src = CALENDLY_SCRIPT_SRC;
+      script.async = true;
+      script.defer = true;
+
+      script.onload = () => {
+        script.setAttribute('data-loaded', 'true');
+        resolve();
+      };
+      script.onerror = () => reject(new Error('Calendly script failed to load'));
+
+      document.body.appendChild(script);
+    });
+  }
+
+  // Initialize Calendly widget into the provided container for a tab
+  async function initCalendlyForTab(tabId: string) {
+    // Guard
+    if (!isVisible) return; // only initialize when section is visible
+    if (initializedTabs.current.has(tabId)) return; // already initialized
+
+    const tab = tabs.find((t) => t.id === tabId);
+    if (!tab) return;
+
+    const container = widgetContainers.current[tabId];
+    if (!container) return;
+
+    try {
+      await loadCalendlyScript();
+
+      // Defensive cleanup: remove any children (placeholder) before init
+      container.innerHTML = '';
+
+      // Use Calendly's initInlineWidget to mount the widget
+      if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+        window.Calendly.initInlineWidget({
+          url: tab.url,
+          parentElement: container,
+        });
+
+        initializedTabs.current.add(tabId);
+      } else {
+        // If Calendly API not present after load, print a console warning
+        // (script may have different load timing in some environments)
+        console.warn('Calendly API not available after script load.');
+      }
+    } catch (err) {
+      // Fail silently in UI but log for debugging
+      console.error('Failed to load Calendly widget:', err);
+    }
+  }
+
+  // Effect: initialize widget when the section is visible and activeTab is set
+  useEffect(() => {
+    if (!isVisible) return;
+
+    // Initialize the active tab's Calendly widget (if not already)
+    initCalendlyForTab(activeTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVisible, activeTab]);
+
+  // If you want to proactively init the first tab once visible:
+  useEffect(() => {
+    if (isVisible) {
+      initCalendlyForTab(activeTab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVisible]);
 
   return (
     <section id="contact" ref={sectionRef} className="relative py-32 bg-dark-deep overflow-hidden">
@@ -105,10 +210,17 @@ export default function Contact() {
                   }`}
                 >
                   <div className="flex items-center gap-4 mb-3">
-                    <div className={`p-3 rounded-xl ${activeTab === tab.id ? 'bg-neon/20' : 'bg-neon/10'}`}>
+                    <div
+                      className={`p-3 rounded-xl ${activeTab === tab.id ? 'bg-neon/20' : 'bg-neon/10'}`}
+                      aria-hidden
+                    >
                       <Icon className="w-6 h-6 text-neon" strokeWidth={2} />
                     </div>
-                    <h3 className={`font-heading font-bold ${activeTab === tab.id ? 'text-neon' : 'text-light'}`}>
+                    <h3
+                      className={`font-heading font-bold ${
+                        activeTab === tab.id ? 'text-neon' : 'text-light'
+                      }`}
+                    >
                       {tab.title}
                     </h3>
                   </div>
@@ -123,6 +235,7 @@ export default function Contact() {
                 key={tab.id}
                 id={tab.id}
                 role="tabpanel"
+                aria-hidden={activeTab !== tab.id}
                 className={activeTab === tab.id ? 'block' : 'hidden'}
               >
                 <div className="mb-6">
@@ -132,14 +245,26 @@ export default function Contact() {
 
                 <div className="bg-dark-deep/50 rounded-xl p-8 text-center border border-neon/10">
                   <Calendar className="w-16 h-16 text-neon mx-auto mb-4 icon-glow-neon" strokeWidth={1.5} />
-                  <p className="text-light/70 mb-4">
-                    Calendly integration placeholder
-                  </p>
+                  <p className="text-light/70 mb-4">Calendly integration</p>
                   <p className="text-sm text-light/50 mb-4">
-                    In production, the Calendly widget would load here
+                    The booking widget appears below once loaded.
                   </p>
-                  <div className="text-xs text-light/40 font-mono break-all">
-                    {tab.url}
+
+                  {/* Calendly container: Calendly will inject an iframe inside this div */}
+                  <div
+                    ref={(el) => {
+                      widgetContainers.current[tab.id] = el;
+                    }}
+                    className="calendly-widget-container w-full min-h-[420px]"
+                    aria-live="polite"
+                    aria-label={`${tab.title} booking`}
+                  >
+                    {/* In dev / local we show the url as placeholder if not initialized */}
+                    {!initializedTabs.current.has(tab.id) && (
+                      <div className="text-xs text-light/40 font-mono break-all">
+                        {isVisible ? 'Loading booking widget...' : tab.url}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
