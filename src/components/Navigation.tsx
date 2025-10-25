@@ -1,4 +1,4 @@
-import { Leaf } from 'lucide-react';
+import { Leaf, Mail, Phone } from 'lucide-react';
 
 interface NavigationProps {
   scrolled: boolean;
@@ -27,6 +27,20 @@ export default function Navigation({ scrolled }: NavigationProps) {
             </span>
           </div>
 
+          <div className="hidden lg:flex items-center gap-6">
+            <div className="flex items-center gap-6 text-sm">
+              <a href="mailto:info@agricarbonx.com" className="flex items-center gap-2 text-light/80 hover:text-neon transition-colors">
+                <Mail className="w-4 h-4" strokeWidth={2} />
+                <span>info@agricarbonx.com</span>
+              </a>
+              <div className="w-px h-4 bg-light/20"></div>
+              <a href="tel:+919880973453" className="flex items-center gap-2 text-light/80 hover:text-neon transition-colors">
+                <Phone className="w-4 h-4" strokeWidth={2} />
+                <span>+91-9880973453</span>
+              </a>
+            </div>
+          </div>
+
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection('about')}
@@ -47,10 +61,10 @@ export default function Navigation({ scrolled }: NavigationProps) {
               Impact
             </button>
             <button
-              onClick={() => scrollToSection('blockchain')}
+              onClick={() => scrollToSection('contact')}
               className="text-light hover:text-neon transition-colors duration-200"
             >
-              Blockchain
+              Contact
             </button>
             <button
               onClick={() => scrollToSection('cta')}

@@ -5,6 +5,7 @@ import TechTools from './components/TechTools';
 import Impact from './components/Impact';
 import Certifications from './components/Certifications';
 import Blockchain from './components/Blockchain';
+import Contact from './components/Contact';
 import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation';
@@ -30,6 +31,7 @@ function App() {
       <Impact />
       <Certifications />
       <Blockchain />
+      <Contact />
       <CallToAction />
       <Footer />
     </div>

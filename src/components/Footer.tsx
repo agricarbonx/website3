@@ -30,30 +30,42 @@ export default function Footer() {
             </p>
 
             <div className="space-y-4 mb-8">
-              <div className="flex items-center gap-3 text-light/70">
-                <MapPin className="w-5 h-5 text-neon" strokeWidth={2} />
-                <span>San Francisco, CA 94102</span>
+              <div className="flex items-start gap-3 text-light/70">
+                <MapPin className="w-5 h-5 text-neon flex-shrink-0 mt-1" strokeWidth={2} />
+                <div>
+                  <div className="font-semibold text-light mb-1">AgriCarbonX (HQ)</div>
+                  <div>Prestige Tech Park, Whitefield,</div>
+                  <div>Bengaluru, Karnataka 560066, India</div>
+                </div>
               </div>
               <div className="flex items-center gap-3 text-light/70">
                 <Mail className="w-5 h-5 text-neon" strokeWidth={2} />
-                <span>hello@agricarbonx.com</span>
+                <a href="mailto:info@agricarbonx.com" className="hover:text-neon transition-colors">info@agricarbonx.com</a>
               </div>
               <div className="flex items-center gap-3 text-light/70">
                 <Phone className="w-5 h-5 text-neon" strokeWidth={2} />
-                <span>+1 (555) 123-4567</span>
+                <a href="tel:+919880973453" className="hover:text-neon transition-colors">+91-9880973453</a>
               </div>
+            </div>
+
+            <div className="glass-card p-4 rounded-xl mb-8">
+              <p className="text-xs text-light/60">
+                For partnerships, press or certification requests, email <a href="mailto:info@agricarbonx.com" className="text-neon hover:underline">info@agricarbonx.com</a>
+              </p>
             </div>
 
             <div className="flex gap-4">
               {[
-                { Icon: Twitter, label: 'Twitter' },
-                { Icon: Linkedin, label: 'LinkedIn' },
-                { Icon: Github, label: 'GitHub' },
-                { Icon: Mail, label: 'Email' },
-              ].map(({ Icon, label }) => (
+                { Icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/agricarbonx' },
+                { Icon: Twitter, label: 'X (Twitter)', href: 'https://twitter.com/agricarbonx' },
+                { Icon: Mail, label: 'Instagram', href: 'https://instagram.com/agricarbonx' },
+                { Icon: Github, label: 'YouTube', href: 'https://youtube.com/@agricarbonx' },
+              ].map(({ Icon, label, href }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group w-12 h-12 rounded-xl glass-card flex items-center justify-center hover:neon-glow transition-all duration-300 transform hover:scale-110"
                   aria-label={label}
                 >
@@ -72,6 +84,7 @@ export default function Footer() {
                 { label: 'Impact', id: 'impact' },
                 { label: 'Blockchain', id: 'blockchain' },
                 { label: 'Partners', id: 'certifications' },
+                { label: 'Contact', id: 'contact' },
               ].map(({ label, id }) => (
                 <li key={id}>
                   <button
@@ -105,10 +118,10 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-light/60 text-sm">
-            &copy; {new Date().getFullYear()} AgriCarbonX. All rights reserved.
+            &copy; {new Date().getFullYear()} AgriCarbonX — Pursuing global carbon standards. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-6 text-sm">
-            {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item) => (
+            {['Privacy Policy', 'Terms of Service', 'Data & Cookies'].map((item) => (
               <a key={item} href="#" className="text-light/60 hover:text-neon transition-colors duration-200">
                 {item}
               </a>

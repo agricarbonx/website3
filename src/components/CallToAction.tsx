@@ -28,13 +28,34 @@ export default function CallToAction() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setEmail('');
-    }, 3000);
+
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('_subject', 'AgriCarbonX newsletter signup');
+
+      const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          setEmail('');
+        }, 5000);
+      } else {
+        alert('Subscription failed — please try again or contact info@agricarbonx.com');
+      }
+    } catch (error) {
+      alert('Network error — please try again later.');
+    }
   };
 
   const actions = [
@@ -126,26 +147,33 @@ export default function CallToAction() {
               Get the latest updates on carbon markets, sustainability trends, and innovations.
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4" aria-label="Subscribe to AgriCarbonX updates">
             <div className="relative flex-1">
               <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-light/40" strokeWidth={2} />
               <input
                 type="email"
+                id="email"
+                name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
+                placeholder="you@company.com"
                 required
+                aria-label="Email address"
                 className="w-full pl-14 pr-6 py-5 rounded-xl glass-card text-light placeholder-light/40 focus:outline-none focus:ring-2 focus:ring-neon font-medium"
               />
             </div>
             <button
               type="submit"
-              className="group px-10 py-5 bg-neon text-dark font-bold text-lg rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:neon-glow flex items-center justify-center gap-3"
+              disabled={submitted}
+              className="group px-10 py-5 bg-neon text-dark font-bold text-lg rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:neon-glow flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span>{submitted ? 'Subscribed!' : 'Subscribe'}</span>
+              <span>{submitted ? 'Thanks — check your inbox!' : 'Subscribe'}</span>
               {!submitted && <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" strokeWidth={2.5} />}
             </button>
           </form>
+          {submitted && (
+            <p className="text-center text-sm text-neon mt-4">Thank you for subscribing! Check your inbox for confirmation.</p>
+          )}
         </div>
       </div>
     </section>
