@@ -269,4 +269,32 @@
   .border-glow:hover::before {
     opacity: 0.6;
   }
+
+  .calendly-widget-container {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .calendly-widget-container iframe {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 620px !important;
+    border: 0 !important;
+  }
+
+  @media (min-width: 768px) {
+    .calendly-widget-container {
+      min-height: 700px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .calendly-widget-container {
+      min-height: 620px;
+    }
+
+    .calendly-widget-container iframe {
+      min-height: 620px !important;
+    }
+  }
 }

@@ -29,23 +29,23 @@ export default function About() {
   const features = [
     {
       icon: Target,
-      title: 'Our Mission',
-      description: 'Revolutionizing carbon markets through transparent, verifiable, and scalable solutions that empower farmers and combat climate change.',
-      stats: ['10K+ Farmers', '47 Countries'],
+      title: 'Verify & Tokenize',
+      description: 'Verify and tokenize soil carbon with scientific rigor.',
+      stats: ['AI Verified', 'Blockchain Secured'],
       color: 'neon'
     },
     {
       icon: Globe,
-      title: 'Global Impact',
-      description: 'Connecting stakeholders worldwide to create a sustainable ecosystem where environmental action meets economic opportunity.',
-      stats: ['150+ Partners', '5 Continents'],
+      title: 'Transparent Credits',
+      description: 'Deliver transparent carbon credits to corporate buyers.',
+      stats: ['High-Integrity', 'Market-Ready'],
       color: 'violet'
     },
     {
       icon: Zap,
-      title: 'Innovation First',
-      description: 'Leveraging blockchain, AI, and IoT to build the most advanced carbon accounting and verification platform on the planet.',
-      stats: ['99.9% Accurate', 'Real-time Data'],
+      title: 'Farmer Income',
+      description: 'Increase farmer incomes through regenerative ag practices.',
+      stats: ['Direct Payment', 'Scalable Income'],
       color: 'orange'
     },
   ];
@@ -64,11 +64,10 @@ export default function About() {
           </div>
 
           <h2 className="text-5xl md:text-7xl font-heading font-black text-light mb-6 tracking-tight">
-            Empowering a <br />
-            <span className="gradient-text">Sustainable Future</span>
+            Our <span className="gradient-text">Mission</span>
           </h2>
           <p className="text-xl text-light/60 max-w-3xl mx-auto font-light leading-relaxed">
-            AgriCarbonX bridges the gap between agriculture, technology, and sustainability, creating verified carbon credits that drive real environmental change.
+            AgriCarbonX converts verified soil carbon into high-integrity, tradable credits while empowering farmers with regenerative income. We combine AI, remote sensing and field verification to deliver transparent carbon accounting and enterprise-grade reporting.
           </p>
         </div>
 

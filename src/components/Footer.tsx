@@ -33,9 +33,10 @@ export default function Footer() {
               <div className="flex items-start gap-3 text-light/70">
                 <MapPin className="w-5 h-5 text-neon flex-shrink-0 mt-1" strokeWidth={2} />
                 <div>
-                  <div className="font-semibold text-light mb-1">AgriCarbonX (HQ)</div>
-                  <div>Prestige Tech Park, Whitefield,</div>
-                  <div>Bengaluru, Karnataka 560066, India</div>
+                  <div className="font-semibold text-light mb-1">AgriCarbonX Technologies Pvt. Ltd.</div>
+                  <div>Level 9, Prestige Trade Tower</div>
+                  <div>46 Palace Road, Vasanth Nagar</div>
+                  <div>Bengaluru, Karnataka 560001, India</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 text-light/70">

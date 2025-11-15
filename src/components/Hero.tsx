@@ -4,7 +4,15 @@ import Particles from './Particles';
 
 export default function Hero() {
   const [typedText, setTypedText] = useState('');
-  const fullText = 'Building the Future of Carbon, Soil, and Sustainability';
+  const [rotatingText, setRotatingText] = useState('Carbon Accounting');
+  const fullText = 'Building the Future of Carbon, Soil and Sustainability';
+
+  const rotatingTexts = [
+    'Carbon Accounting',
+    'Soil Intelligence',
+    'Blockchain Traceability',
+    'Market Access'
+  ];
 
   useEffect(() => {
     let index = 0;
@@ -18,6 +26,16 @@ export default function Hero() {
     }, 50);
 
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    let rotatingIndex = 0;
+    const rotatingTimer = setInterval(() => {
+      rotatingIndex = (rotatingIndex + 1) % rotatingTexts.length;
+      setRotatingText(rotatingTexts[rotatingIndex]);
+    }, 4000);
+
+    return () => clearInterval(rotatingTimer);
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -63,21 +81,29 @@ export default function Hero() {
             </p>
           </div>
 
+          <p className="text-lg md:text-xl text-neon/80 font-light max-w-3xl mx-auto mb-8 h-8">
+            <span className="inline-block min-w-[280px]">{rotatingText}</span>
+          </p>
+
+          <p className="text-light/70 max-w-4xl mx-auto mb-12 leading-relaxed text-base md:text-lg">
+            AI + remote sensing + blockchain to measure, verify and tokenize soil carbon — enabling high-integrity credits, farmer income and enterprise-grade reporting.
+          </p>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20">
             <button
-              onClick={() => scrollToSection('tech')}
+              onClick={() => scrollToSection('contact')}
               className="group relative px-10 py-5 bg-neon text-dark font-bold text-lg rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:neon-glow flex items-center gap-3 overflow-hidden"
             >
-              <span className="relative z-10">Explore Technology</span>
+              <span className="relative z-10">Request Demo</span>
               <ArrowRight className="w-6 h-6 relative z-10 group-hover:translate-x-2 transition-transform" strokeWidth={2.5} />
               <div className="absolute inset-0 bg-gradient-to-r from-neon to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
 
             <button
-              onClick={() => scrollToSection('cta')}
+              onClick={() => scrollToSection('tech')}
               className="group relative px-10 py-5 glass-strong font-bold text-lg rounded-xl border-2 border-neon/30 text-light transition-all duration-300 transform hover:scale-105 hover:border-neon hover:neon-glow flex items-center gap-3"
             >
-              <span>Join Network</span>
+              <span>Explore Our Tech</span>
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" strokeWidth={2.5} />
             </button>
           </div>
@@ -87,29 +113,29 @@ export default function Hero() {
           {[
             {
               icon: TrendingUp,
-              value: '50M+',
-              label: 'Tons CO₂ Captured',
+              value: '1.25M',
+              label: 'tCO₂e Captured',
               color: 'neon',
               gradient: 'from-neon/20 to-neon/5'
             },
             {
               icon: Sparkles,
-              value: '10K+',
+              value: '850',
               label: 'Farms Onboarded',
               color: 'violet',
               gradient: 'from-violet/20 to-violet/5'
             },
             {
               icon: Zap,
-              value: '2M+',
+              value: '420K',
               label: 'Credits Issued',
               color: 'orange',
               gradient: 'from-orange/20 to-orange/5'
             },
             {
               icon: Shield,
-              value: '150+',
-              label: 'Global Partners',
+              value: '50',
+              label: 'Partners & Pilots',
               color: 'neon',
               gradient: 'from-neon/20 to-neon/5'
             },

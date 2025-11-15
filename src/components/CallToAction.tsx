@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Mail, Users, Briefcase, Rocket } from 'lucide-react';
+import { ArrowRight, Mail, Users, Briefcase, Rocket, Calendar } from 'lucide-react';
 
 export default function CallToAction() {
   const [isVisible, setIsVisible] = useState(false);
@@ -144,10 +144,11 @@ export default function CallToAction() {
               Stay <span className="text-neon">Connected</span>
             </h3>
             <p className="text-lg text-light/70">
-              Get the latest updates on carbon markets, sustainability trends, and innovations.
+              Want to build climate-positive impact with us? Subscribe or book a quick chat below.
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4" aria-label="Subscribe to AgriCarbonX updates">
+
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 mb-8" aria-label="Subscribe to AgriCarbonX updates">
             <div className="relative flex-1">
               <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-light/40" strokeWidth={2} />
               <input
@@ -172,8 +173,28 @@ export default function CallToAction() {
             </button>
           </form>
           {submitted && (
-            <p className="text-center text-sm text-neon mt-4">Thank you for subscribing! Check your inbox for confirmation.</p>
+            <p className="text-center text-sm text-neon mb-8">Thank you for subscribing! Check your inbox for confirmation.</p>
           )}
+
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-light/20"></div>
+            <span className="text-sm text-light/50">or</span>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-light/20"></div>
+          </div>
+
+          <button
+            onClick={() => {
+              const contactSection = document.getElementById('contact');
+              if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="group w-full px-8 py-5 glass-card border-2 border-neon/30 hover:border-neon rounded-xl text-light font-bold text-lg transition-all duration-300 hover:neon-glow hover:bg-neon/5 flex items-center justify-center gap-3"
+          >
+            <Calendar className="w-6 h-6 text-neon" strokeWidth={2} />
+            <span>Schedule a Call</span>
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" strokeWidth={2.5} />
+          </button>
         </div>
       </div>
     </section>

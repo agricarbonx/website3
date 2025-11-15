@@ -181,10 +181,10 @@ export default function Contact() {
           </div>
 
           <h2 className="text-5xl md:text-7xl font-heading font-black text-light mb-6 tracking-tight">
-            Let's <span className="gradient-text">Connect</span>
+            Book an Intro or <span className="gradient-text">Consultation</span>
           </h2>
           <p className="text-xl text-light/60 max-w-3xl mx-auto font-light">
-            Schedule a call with our team to discuss how AgriCarbonX can support your carbon credit goals.
+            Select an event below to schedule a discovery, technical consultation or partnership discussion.
           </p>
         </div>
 
@@ -255,13 +255,14 @@ export default function Contact() {
                     ref={(el) => {
                       widgetContainers.current[tab.id] = el;
                     }}
-                    className="calendly-widget-container w-full min-h-[420px]"
+                    className="calendly-widget-container w-full"
+                    style={{ minHeight: '700px' }}
                     aria-live="polite"
                     aria-label={`${tab.title} booking`}
                   >
                     {/* In dev / local we show the url as placeholder if not initialized */}
                     {!initializedTabs.current.has(tab.id) && (
-                      <div className="text-xs text-light/40 font-mono break-all">
+                      <div className="text-xs text-light/40 font-mono break-all p-4">
                         {isVisible ? 'Loading booking widget...' : tab.url}
                       </div>
                     )}
